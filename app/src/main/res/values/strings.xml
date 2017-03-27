@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Movie Quotes</string>
+    <string name="main.button.getRandom">Get Random Quote</string>
+</resources>

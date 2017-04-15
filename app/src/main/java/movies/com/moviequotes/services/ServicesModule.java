@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import movies.com.moviequotes.BuildConfig;
 import movies.com.moviequotes.QuoteInteractor;
 import movies.com.moviequotes.QuoteInteractorImpl;
 import movies.com.moviequotes.QuotePresenter;
@@ -32,8 +31,8 @@ public class ServicesModule {
 
     @Provides
     @Singleton
-    QuoteInteractor provideQuoteInteractor(RandomMovieConnector randomMovieConnector, QuotesConnector quotesConnector) {
-        return new QuoteInteractorImpl(randomMovieConnector, quotesConnector, BuildConfig.QUOTES_SERVICE_TOKEN);
+    QuoteInteractor provideQuoteInteractor(FirebaseDatabaseConnector firebaseDatabaseConnector) {
+        return new QuoteInteractorImpl(firebaseDatabaseConnector);
     }
 
     @Provides
@@ -47,26 +46,14 @@ public class ServicesModule {
 
     @Provides
     @Singleton
-    RandomMovieConnector provideRandomMovieConnector(OkHttpClient okHttpClient) {
+    FirebaseDatabaseConnector provideFirebaseDatabaseConnector(OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://random-movie.herokuapp.com/")
+                .baseUrl("https://movie-quotes-832b0.firebaseio.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
 
-            return retrofit.create(RandomMovieConnector.class);
-    }
-
-    @Provides
-    @Singleton
-    QuotesConnector provideQuotesConnector(OkHttpClient okHttpClient) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.myapifilms.com/imdb/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        return retrofit.create(QuotesConnector.class);
+        return retrofit.create(FirebaseDatabaseConnector.class);
     }
 
 }

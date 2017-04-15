@@ -1,6 +1,5 @@
 package movies.com.moviequotes;
 
-
 public interface QuoteView {
-    void showQuote(Quote quote);
+    void showQuote(MovieQuote quote);
 }

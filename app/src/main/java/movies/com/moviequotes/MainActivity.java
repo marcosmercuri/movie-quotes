@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements QuoteView {
     }
 
     @Override
-    public void showQuote(Quote quote) {
+    public void showQuote(MovieQuote quote) {
         quoteFragment.showQuote(quote);
         hideProgress();
     }

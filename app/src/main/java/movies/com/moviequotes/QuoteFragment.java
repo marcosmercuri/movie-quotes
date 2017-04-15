@@ -2,22 +2,29 @@ package movies.com.moviequotes;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import movies.com.moviequotes.services.Line;
 
 public class QuoteFragment extends Fragment {
 
     private static final String SAVE_INSTANCE_QUOTE_TEXT_KEY = "quoteText";
     private static final String SAVE_INSTANCE_MOVIE_TEXT_KEY = "movieText";
-    @Bind(R.id.txtQuoteText)
-    TextView txtQuoteText;
     @Bind(R.id.txtQuoteMovieTitle)
     TextView txtQuoteMovieTitle;
+    @Bind(R.id.recycler)
+    RecyclerView recyclerView;
+    private List<Line> quoteLines;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,7 +33,8 @@ public class QuoteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_quote, container, false);
         ButterKnife.bind(this, view);
         if (savedInstanceState!=null && !savedInstanceState.isEmpty()) {
-            txtQuoteText.setText((CharSequence) savedInstanceState.get(SAVE_INSTANCE_QUOTE_TEXT_KEY));
+            quoteLines = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_QUOTE_TEXT_KEY);
+            updateRecyclerView(quoteLines);
             txtQuoteMovieTitle.setText((CharSequence) savedInstanceState.get(SAVE_INSTANCE_MOVIE_TEXT_KEY));
         }
         return view;
@@ -35,18 +43,21 @@ public class QuoteFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(SAVE_INSTANCE_QUOTE_TEXT_KEY, txtQuoteText.getText().toString());
+        if (quoteLines!=null) {
+            outState.putParcelableArrayList(SAVE_INSTANCE_QUOTE_TEXT_KEY, (ArrayList<Line>) quoteLines);
+        }
         outState.putString(SAVE_INSTANCE_MOVIE_TEXT_KEY, txtQuoteMovieTitle.getText().toString());
     }
 
-    public void showQuote(Quote quote) {
-        StringBuilder builder = new StringBuilder(quote.getTextLines().size());
-        for (String lines : quote.getTextLines()) {
-            builder.append(lines);
-            builder.append('\n');
-        }
-        txtQuoteMovieTitle.setText(quote.getMovie());
-        txtQuoteText.setText(builder.toString());
+    public void showQuote(MovieQuote quote) {
+        txtQuoteMovieTitle.setText(quote.getTitle());
+        quoteLines = quote.getQuote().getLines();
+        updateRecyclerView(quoteLines);
+    }
+
+    private void updateRecyclerView(List<Line> lines) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(new Adapter(lines));
     }
 
     @Override

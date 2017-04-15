@@ -10,19 +10,17 @@
         android:orientation="vertical"
         tools:context="movies.com.moviequotes.QuoteFragment">
 
-        <TextView
-            android:id="@+id/txtQuoteText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:visibility="visible" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <TextView
+            android:paddingTop="@dimen/activity_horizontal_margin"
             android:id="@+id/txtQuoteMovieTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:visibility="visible" />
-
     </LinearLayout>
 </ScrollView>
